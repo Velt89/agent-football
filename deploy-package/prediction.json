@@ -1,0 +1,55 @@
+{
+  "contract": "AgentFootball",
+  "compiler": "solc 0.8.24, optimizer 200 runs, evm paris, viaIR true",
+  "runtimeBytes": 21741,
+  "creationBytes": 22115,
+  "config": {
+    "contract": "AgentFootball",
+    "symbol": "AFB",
+    "seasonId": 1,
+    "creatorW": "0x0518AE367CA3612872Aa2f0897BF3B5FaFCE893A",
+    "agentIdRegistry": "0x60B9262456dE011F7d15a54CdD8c48bAaa8B022F",
+    "fees": {
+      "mintPlayer": "gas only (non-payable)",
+      "dailyDraw": "gas only (non-payable)",
+      "coachSession": "0.001 BNB exactly, +4 to one stat, max 1/day",
+      "positionChange": "0.001 BNB exactly, max 1/season, total preserved",
+      "topUpKick": "100 KICK per 0.001 BNB, 100-500/call, max 500/day"
+    },
+    "feeSplit": "90% rewardPool / 8% buybackTreasury / 2% creator (immediate)",
+    "royalty": "ERC-2981 5% to the contract (reward pool)",
+    "unlockCost": "20 surplus points per new stat, starts at 40, cap 99",
+    "immortalReward": "all 5 base stats == 99 -> soulbound Immortal XI Badge + position Legend NFT (FW 30 / GK 31 / DF 32 / MF 33)",
+    "dailyItems": [
+      "Protein Shake",
+      "Vitamin",
+      "Electrolyte Drink",
+      "Banana",
+      "Ice Bath"
+    ],
+    "supermarketItems": {
+      "10": "Recovery Shake Pro",
+      "11": "Energy Gel",
+      "12": "Sleep Mask Pro",
+      "13": "Knee Brace",
+      "14": "Ankle Tape",
+      "15": "Muscle Rub",
+      "16": "Physio Session",
+      "17": "Medical Kit",
+      "18": "Cryotherapy",
+      "note": "S1 OFF-CHAIN inventory only — no on-chain mint function exists for these ids"
+    },
+    "kick": "S1 $KICK is off-chain points (Workers ledger). No $KICK ERC-20 in this contract."
+  },
+  "create2": {
+    "proxy": "0x4e59b44847b379578588920cA78FbF26c0B4956C",
+    "saltLabel": "velt.agentfootball.v1",
+    "salt": "0x11646108892a117a171e151a680f1ad99e41b28b2add1f1b4edc3c070989b30e",
+    "constructorArgs": {
+      "registry": "0x60B9262456dE011F7d15a54CdD8c48bAaa8B022F",
+      "creator": "0x0518AE367CA3612872Aa2f0897BF3B5FaFCE893A"
+    },
+    "predictedAddress": "0xD033236A4450DE1703CF63888355c2a29B4D62D8",
+    "note": "PREDICTION ONLY — nothing deployed, nothing signed. Frontend config stays zero-address until a real deployment is verified on-chain."
+  }
+}

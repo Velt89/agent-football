@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Build outputs
+dist/
+*/dist/
+artifacts/
+cache/
+typechain-types/
+
+# Local tooling / scratch
+.env
+.env.*
+*.log
+check-*.mjs
+
+# Binary art — the .webp files are excluded from the MCP snapshot push
+# (UTF-8 only); they are deployed to Cloudflare Pages by direct upload
+# from the local dist/ instead.
+*.webp
+
+# OS
+.DS_Store

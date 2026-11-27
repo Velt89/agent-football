@@ -3,9 +3,20 @@
 **Brand: Agent Football — Agent ID Football Growth.** Train, grow, play live.
 Repo: `Velt89/agent-football` · Site: `agent-football.pages.dev` (Cloudflare Pages).
 
-Status: **DESIGN LOCKED + CONTRACT BUILT — NOT DEPLOYED.** No deploy until
-all deploy gates pass and the user gives explicit deploy go-ahead
-(see `DESIGN.md` → "Deploy gates").
+Status: **LIVE — Season 1.** Contract deployed 2026-11-27 via BAW CREATE2
+proxy, Sourcify VERIFIED exact_match (matchId 60053691).
+
+- Contract: `0xD033236A4450DE1703CF63888355c2a29B4D62D8` (BSC)
+  · deploy tx `0xc13ca21735b9d571aa9ff3166599a7afa4108e91be616841617dd78131573d1b`,
+  block 135980878
+- Site: https://agent-football.pages.dev (Cloudflare Pages, GitHub-connected)
+- First player minted: **Velt**, Midfielder, token #0
+  (Passing 44, Vision 47, Dribbling 44, Stamina 59, Long Shots 47 — total 241,
+  overall 48), Day-1 item Banana
+- Deploy gates: see `DESIGN.md` → "Deploy gates".
+- Note: `setBaseURI` is frozen after the first mint, so on-chain `tokenURI`
+  stays empty; metadata is served off-chain at
+  `https://agent-football.pages.dev/metadata/<id>` (see `frontend/README.md`).
 
 ## What this is
 

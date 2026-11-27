@@ -1,0 +1,21 @@
+{
+  "description": "AgentFootball — 1 soulbound player per Agent ID holder, daily free item draw, coach sessions, $KICK top-ups, surplus unlocks, Immortal XI reward. BUILD ONLY — no deploy, no broadcast.",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "ethers": "^6.13.0",
+    "hardhat": "^2.22.0"
+  },
+  "name": "agentfootball",
+  "private": true,
+  "scripts": {
+    "compile": "hardhat compile",
+    "prepare-deploy": "hardhat run scripts/prepare-deploy.js",
+    "test": "hardhat test",
+    "build:workers": "npx -y -p typescript@5.6 tsc -p workers/tsconfig.json",
+    "typecheck:workers": "npx -y -p typescript@5.6 tsc -p workers/tsconfig.json --noEmit",
+    "fixtures": "node workers/scripts/gen-fixtures.mjs",
+    "serve": "node workers/local-server.mjs",
+    "smoke": "node workers/scripts/smoke.mjs"
+  },
+  "version": "0.1.0"
+}

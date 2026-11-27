@@ -336,7 +336,7 @@ export async function handleRequest(
     const wallet = parts[2];
     if (!isWallet(wallet)) return err("BAD_WALLET", "wallet must be a 0x 40-hex address", 400);
     const p = await loadPlayer(store, wallet, opts);
-    if (!p) return err("PLAYER_NOT_FOUND", "No player for this wallet — mint first (not yet deployed)", 404);
+    if (!p) return err("PLAYER_NOT_FOUND", "No player for this wallet — mint first", 404);
     applyOvernightReset(p, today);
     await store.savePlayer(p);
     return ok({ player: await publicPlayer(p, await store.getInventory(wallet)), ledger: await store.getLedger(wallet, week) });
@@ -474,15 +474,15 @@ export async function handleRequest(
     const statName = statNames[statIndex];
     if (!statName) return err("BAD_STAT", `statIndex must be 0-${statNames.length - 1} for ${p.position}`, 400);
     await store.addTraining({ wallet, date_utc: today, slot: "coach", intensity: "coach", stat_index: statIndex, gain: 0, injury_roll: false });
-    // Calldata is a placeholder until the contract exists; amount is exact.
+    // Real coachSession(uint8) calldata for the live contract; amount is exact.
     const statWord = String(statIndex).padStart(64, "0");
     return ok({
       intent: {
         kind: "coach_session", status: "PENDING_ONCHAIN",
-        to: "0x0000000000000000000000000000000000000000",
+        to: CONTRACT_ADDRESS,
         amountBnb: COACH.costBnb, amountWei: COACH.costWei,
         calldata: COACH.calldataPlaceholder + statWord,
-        calldataNote: "PLACEHOLDER — real coachSession(uint8) selector is set at contract deploy; do not broadcast this calldata.",
+        calldataNote: "Real coachSession(uint8) calldata for the live contract; intent only — the frontend/agent must still preview via BAW before broadcasting.",
         stat: statName, statIndex, gain: COACH.gain, injuryPct: COACH.injuryPct, fatigue: COACH.fatigue,
       },
       note: "Intent recorded only. The +4 stat / +20 fatigue apply when the on-chain tx confirms.",
@@ -599,7 +599,7 @@ export async function handleRequest(
       intent: {
         id: intentId, status: "PENDING", kind: "kick_topup",
         amountKick: amount, amountBnb: bnb.toFixed(6),
-        to: "0x0000000000000000000000000000000000000000",
+        to: CONTRACT_ADDRESS,
         bnbSplit: { rewards: +(bnb * 0.9).toFixed(6), buybackTreasury: +(bnb * 0.08).toFixed(6), creator: +(bnb * 0.02).toFixed(6) },
         note: "$KICK is credited ONLY after the on-chain TopUp event confirms. Local mode records PENDING.",
       },

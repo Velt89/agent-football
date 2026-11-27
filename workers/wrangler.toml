@@ -15,16 +15,17 @@ ENVIRONMENT = "production"
 [[d1_databases]]
 binding = "DB"
 database_name = "agent_football_db"
-database_id = "00000000-0000-0000-0000-000000000000" # TODO: paste real D1 id after `wrangler d1 create`
+database_id = "7b601cd1-45f9-421e-b059-0166432652c6" # created 2026-11-27, schema applied, 16 teams seeded
 
 [[kv_namespaces]]
 binding = "AGENT_FOOTBALL_KV"
-id = "00000000-0000-0000-0000-000000000000" # TODO: paste real KV id after `wrangler kv namespace create`
+id = "f10e697d96d64593948564238968f7e6" # created 2026-11-27
 
 [[durable_objects.bindings]]
 name = "MATCH_ROOM"
 class_name = "MatchRoom"
 
+# NOTE: free plan requires SQLite-backed Durable Objects.
 [[migrations]]
 tag = "v1"
-new_classes = ["MatchRoom"]
+new_sqlite_classes = ["MatchRoom"]

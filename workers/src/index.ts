@@ -13,6 +13,10 @@
 // D1Store against a local `wrangler d1` / miniflare instance and re-run the
 // smoke suite against it.
 import { handleRequest } from "./core.js";
+
+// Re-exported so the Durable Object class is present in the deployed
+// main module (required by the MATCH_ROOM binding / v1 migration).
+export { MatchRoom } from "./durable-match-room.js";
 import type { Duel, Fixture, KickTotals, LedgerRow, Player, Store, Team } from "./core.js";
 import { LEGEND_NFT } from "./config.js";
 import { generateFixtures } from "./fixtures.js";

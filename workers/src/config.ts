@@ -1,7 +1,8 @@
 // Agent Football — shared constants. Single source of truth, mirroring DESIGN.md.
-// Nothing here is deployed; contract address stays zero until a real deploy.
-export const CONTRACT_ADDRESS = "0x0000000000000000000000000000000000000000";
-export const DEPLOYED = false;
+// LIVE — deployed 2026-11-27 via BAW CREATE2 proxy, Sourcify exact_match
+// (matchId 60053691). Tx 0xc13ca21735b9d571aa9ff3166599a7afa4108e91be616841617dd78131573d1b, block 135980878.
+export const CONTRACT_ADDRESS = "0xD033236A4450DE1703CF63888355c2a29B4D62D8";
+export const DEPLOYED = true;
 export const REGISTRY = "0x60B9262456dE011F7d15a54CdD8c48bAaa8B022F";
 export const CHAIN_ID = 56; // BSC mainnet
 export const MAIN_WALLET = "0x0518AE367CA3612872Aa2f0897BF3B5FaFCE893A";
@@ -79,9 +80,9 @@ export const COACH = {
   injuryPct: 3,
   fatigue: 20,
   minutes: "60",
-  // Placeholder selector: the real coachSession(uint8) selector is set at contract deploy.
-  // Returned calldata is therefore explicitly marked placeholder until then.
-  calldataPlaceholder: "0x00000000",
+  // Real coachSession(uint8) selector from the deployed contract ABI
+  // (0x9949ae57); per-call calldata = selector + statIndex as uint8.
+  calldataPlaceholder: "0x9949ae57",
 } as const;
 
 // Daily free items (1/day, gas only on-chain at mint; off-chain draw in S1 backend).

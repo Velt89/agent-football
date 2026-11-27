@@ -62,7 +62,20 @@ for marketplaces that accept a manually-set metadata URL. Do not attempt
 | League table / Top Scorers / Top Savers | Placeholder results, 3 rounds "played" |
 | Team names Team A..P, captains TBD | Placeholders until captains name teams at formation |
 | Season dates, matchdays, $KICK caps/splits, item prices, training numbers | Real — from DESIGN.md, in `src/config.ts` |
-| Art | Real — flat-vector night stadium (`public/art/night-stadium.webp`) and item sheet (`public/art/items.webp`), copied from `../art-examples/` (chosen style). Pixel/anime examples are NOT used on the main site. |
+| Art | Real — flat-vector night stadium (`public/art/night-stadium.webp`) and item sheet (`public/art/items.webp`), copied from `../art-examples/` (chosen style). Pixel/anime examples are NOT used on the main site. See "Art pipeline" below — the .webp files are stored as base64 in the repo. |
+
+## Art pipeline (2026-11-27 fix)
+
+The two `.webp` files cannot be pushed to GitHub through the connector
+(its snapshot push is UTF-8 text only, and the files are binary), so they
+are stored as base64 text chunks in `art-src/` (`night-stadium.webp.b64.part-01..06`,
+`items.webp.b64.part-01..04`) and reassembled by `scripts/decode-art.mjs`,
+which runs first in `npm run build` and writes `public/art/*.webp` (Vite
+then copies them into `dist/`, served as `/art/*.webp` and used as the
+metadata `image` URLs). The script is idempotent and fails the build if a
+chunk is missing or the decoded bytes fail the RIFF/WEBP check. If the art
+is ever uploaded as real binary files instead (e.g. via the GitHub web UI),
+delete `art-src/` and the decode step — the build works either way.
 
 ## Pages (8, all in the top nav)
 

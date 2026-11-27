@@ -100,6 +100,27 @@ finals Jan 23 2027, round-robin 28 pairings/group; match = 12–15 moments with
 12'/67'/89' present, halftime 45, MotM present, score == goal moments,
 deterministic replay; weekly pool = 65% of $KICK spent (13 from 20 spent).
 
+## On-chain player sync (lazy indexer, added 2026-11-27)
+
+`GET /api/player/:wallet` used to 404 for wallets that had minted on-chain,
+because nothing copied the mint into D1. Fixed with a lazy sync:
+- `workers/src/core.ts` — `HandlerOpts.syncPlayerFromChain` hook; `loadPlayer`
+  calls it on store miss (any route, not just GET /api/player), saves the
+  returned player, and serves it. Hook returning null or throwing falls back
+  to the old behaviour (404 in prod, demo in dev mode) — an RPC outage never
+  500s a lookup.
+- `workers/src/onchain-sync.ts` — raw `eth_call` (no deps) against BSC RPC
+  with fallback + 8s timeout: `hasPlayer` → `playerOf` → `playerStats` →
+  `surplusPointsOf` → `unlockedStatsOf`, manual ABI decoding. Never throws.
+- Miss-only by design: an existing D1 row is never overwritten from the
+  chain, because off-chain training gains live in D1 and a refresh would
+  clobber them. There is no mint-event indexer yet; the first API lookup
+  after a mint is what imports the player.
+- Tests: `workers/scripts/test-sync.mjs` — 12 passed (stub-hook behaviour +
+  live decode of Velt: token 0, MF, 44/47/44/59/47, surplus 0; unknown
+  wallet → null). Smoke suite still 56/56 (two stale checks updated to the
+  live contract address / DEPLOYED=true and the coach intent's live `to`).
+
 ## Still placeholder / not done
 
 - **Contract address `0x000…000`, `DEPLOYED=false`** — set only after a real

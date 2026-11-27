@@ -16,8 +16,9 @@ typechain-types/
 check-*.mjs
 
 # Binary art — the .webp files are excluded from the MCP snapshot push
-# (UTF-8 only); they are deployed to Cloudflare Pages by direct upload
-# from the local dist/ instead.
+# (UTF-8 text only). They are stored as base64 chunks in
+# frontend/art-src/ and reassembled by frontend/scripts/decode-art.mjs
+# during `npm run build` (see frontend/README.md "Art pipeline").
 *.webp
 
 # OS

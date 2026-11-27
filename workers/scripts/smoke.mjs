@@ -46,10 +46,10 @@ try {
   let r = await req("GET", "/api/health");
   check("health 200 + ok", r.status === 200 && r.json.ok === true, JSON.stringify(r.json));
 
-  // 2. config: zero contract, DEPLOYED=false, registry, caps
+  // 2. config: live contract (deployed 2026-11-27, Sourcify exact_match), registry, caps
   r = await req("GET", "/api/config");
-  check("config contract is zero address", r.json.contract_address === "0x0000000000000000000000000000000000000000", JSON.stringify(r.json.contract_address));
-  check("config DEPLOYED=false", r.json.deployed === false);
+  check("config contract is live 0xD033...62D8", r.json.contract_address === "0xD033236A4450DE1703CF63888355c2a29B4D62D8", JSON.stringify(r.json.contract_address));
+  check("config DEPLOYED=true", r.json.deployed === true);
   check("config registry 0x60B9...022F", r.json.registry === "0x60B9262456dE011F7d15a54CdD8c48bAaa8B022F", JSON.stringify(r.json.registry));
   check("config S1 cap 3,000,000", r.json.kick?.season1Cap === 3000000, JSON.stringify(r.json.kick));
   check("config top-up 100 KICK = 0.001 BNB", r.json.kick?.topupKickPerBnb === 100 && r.json.kick?.topupBnbPer100Kick === "0.001");
@@ -75,7 +75,7 @@ try {
   // 5. coach 1x OK (intent, 0.001 BNB), 2nd FAILS
   r = await req("POST", "/api/coach", { wallet: W, statIndex: 1 });
   check("coach 1st returns 0.001 BNB intent", r.status === 200 && r.json.intent?.amountBnb === "0.001" && r.json.intent?.status === "PENDING_ONCHAIN", JSON.stringify(r.json.intent));
-  check("coach intent does not broadcast (zero to-address)", r.json.intent?.to === "0x0000000000000000000000000000000000000000");
+  check("coach intent targets live contract, still PENDING (no broadcast)", r.json.intent?.to === "0xD033236A4450DE1703CF63888355c2a29B4D62D8" && r.json.intent?.status === "PENDING_ONCHAIN", JSON.stringify(r.json.intent));
   r = await req("POST", "/api/coach", { wallet: W, statIndex: 1 });
   check("coach 2nd FAILS COACH_CAP 429", r.status === 429 && r.json.error === "COACH_CAP", `status=${r.status} error=${r.json.error}`);
 

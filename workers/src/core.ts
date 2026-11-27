@@ -106,6 +106,12 @@ export interface HandlerOpts {
   devMode: boolean; // local server: auto-provision demo players for unknown wallets
   now?: Date;
   random?: () => number;
+  // Lazy on-chain sync (production Worker only): called when the store has
+  // no row for a wallet. Reads the minted player from the live contract
+  // and inserts it. Miss-only — an existing row is never overwritten, so
+  // off-chain training gains in D1 are safe. Must never throw; a null
+  // return (or a throw) falls back to the previous behaviour (404 in prod).
+  syncPlayerFromChain?: (wallet: string) => Promise<Player | null>;
 }
 
 // ---------------------------------------------------------------- helpers
@@ -239,6 +245,20 @@ export class MemoryStore implements Store {
 async function loadPlayer(store: Store, wallet: string, opts: HandlerOpts): Promise<Player | null> {
   const p = await store.getPlayer(wallet);
   if (p) return p;
+  // Lazy on-chain sync: a wallet that minted on-chain but has no D1 row
+  // (e.g. Velt, token 0) is imported from the live contract instead of 404.
+  if (opts.syncPlayerFromChain) {
+    try {
+      const synced = await opts.syncPlayerFromChain(wallet);
+      if (synced) {
+        await store.savePlayer(synced);
+        return synced;
+      }
+    } catch {
+      // RPC outage / decode failure: fall through to the old behaviour
+      // (demo in dev mode, 404 in prod) instead of 500ing the request.
+    }
+  }
   if (!opts.devMode) return null;
   const demo = demoPlayer(wallet);
   await store.savePlayer(demo);

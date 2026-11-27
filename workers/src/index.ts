@@ -13,6 +13,7 @@
 // D1Store against a local `wrangler d1` / miniflare instance and re-run the
 // smoke suite against it.
 import { handleRequest } from "./core.js";
+import { syncPlayerFromChain } from "./onchain-sync.js";
 
 // Re-exported so the Durable Object class is present in the deployed
 // main module (required by the MATCH_ROOM binding / v1 migration).
@@ -337,7 +338,12 @@ export default {
     const query: Record<string, string> = {};
     url.searchParams.forEach((v, k) => { query[k] = v; });
     const store = new D1Store(env.DB);
-    const result = await handleRequest(request.method, url.pathname, query, body, store, { devMode: false });
+    const result = await handleRequest(request.method, url.pathname, query, body, store, {
+      devMode: false,
+      // Lazy on-chain sync: mint on-chain, then the first API lookup imports
+      // the player into D1 (see workers/src/onchain-sync.ts). Miss-only.
+      syncPlayerFromChain,
+    });
     return new Response(JSON.stringify(result.body), {
       status: result.status,
       headers: { "content-type": "application/json", "cache-control": "no-store" },

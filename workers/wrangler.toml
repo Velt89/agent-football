@@ -1,0 +1,30 @@
+# Agent Football — Cloudflare Workers config. CONFIG ONLY.
+# DO NOT run `wrangler deploy` or `wrangler login` from this repo until the
+# user gives explicit deploy go-ahead after the deploy gates pass (DESIGN.md).
+# Create the resources first (once, by hand):
+#   wrangler d1 create agent_football_db
+#   wrangler kv namespace create AGENT_FOOTBALL_KV
+# then paste the returned IDs below.
+name = "agent-football-api"
+main = "src/index.ts"
+compatibility_date = "2026-11-27"
+
+[vars]
+ENVIRONMENT = "production"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "agent_football_db"
+database_id = "00000000-0000-0000-0000-000000000000" # TODO: paste real D1 id after `wrangler d1 create`
+
+[[kv_namespaces]]
+binding = "AGENT_FOOTBALL_KV"
+id = "00000000-0000-0000-0000-000000000000" # TODO: paste real KV id after `wrangler kv namespace create`
+
+[[durable_objects.bindings]]
+name = "MATCH_ROOM"
+class_name = "MatchRoom"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["MatchRoom"]
